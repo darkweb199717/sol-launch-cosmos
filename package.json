@@ -1,7 +1,7 @@
 {
   "name": "sollaunch-cosmos-devnet",
   "private": true,
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "SolLaunch Cosmos — Solana Devnet launch dashboard",
   "type": "module",
   "scripts": {
@@ -10,6 +10,9 @@
     "check": "node --check server.mjs && node --check setup.mjs"
   },
   "dependencies": {
-    "@solana/web3.js": "1.98.4"
+    "@solana/web3.js": "1.98.4",
+    "@raydium-io/raydium-sdk-v2": "0.2.64-alpha",
+    "@solana/spl-token": "0.4.14",
+    "bn.js": "5.2.2"
   }
 }
