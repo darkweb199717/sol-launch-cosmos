@@ -11,6 +11,15 @@ http.createServer(async(req,res)=>{
   const pathname=new URL(req.url,'http://localhost').pathname;
   if(req.method==='GET'&&pathname==='/health')return json(res,200,{status:'ok',network:'devnet',metadataUploadsEnabled:uploadsEnabled});
   if(pathname==='/api/metadata')return json(res,503,{error:'Public metadata uploads are disabled for this Devnet preview.'});
+  if(pathname==='/api/raydium/build'){
+   if(req.method!=='POST')return json(res,405,{error:'Method not allowed'});
+   if(!(req.headers['content-type']||'').startsWith('application/json'))return json(res,415,{error:'JSON required'});
+   const origin=req.headers.origin;
+   const expectedOrigin='https://sollaunch-cosmos.onrender.com';
+   if(origin&&origin!==expectedOrigin&&!/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin))return json(res,403,{error:'Origin not allowed'});
+   try{const {buildDevnetPool}=await import('./raydium-api.mjs');return json(res,200,await buildDevnetPool(req))}
+   catch(e){console.error('Raydium pool build error:',e.message);return json(res,e.httpStatus||503,{error:e.httpStatus?e.message:'Raydium transaction builder is unavailable. Check Devnet status and try again.'})}
+  }
   if(req.method!=='GET'&&req.method!=='HEAD')return json(res,405,{error:'Method not allowed'});
   const file=pathname==='/'?'index.html':pathname.slice(1);
   if(!['index.html','vendor/solana-web3.iife.min.js'].includes(file))return json(res,404,{error:'Not found'});
