@@ -28,6 +28,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.14;ba
     <button data-tab="explore" aria-label="Explore tokens" title="Explore tokens"><span class="nav-ico" aria-hidden="true">◈</span><span class="nav-text">Discover tokens</span></button>
     <button data-tab="create" aria-label="Create token" title="Create token"><span class="nav-ico" aria-hidden="true">✧</span><span class="nav-text">Create a token</span></button>
     <button data-tab="dashboard" aria-label="My launches" title="My launches"><span class="nav-ico" aria-hidden="true">▤</span><span class="nav-text">My launches</span></button>
+    <button data-tab="raydium" aria-label="Raydium pool" title="Raydium pool"><span class="nav-ico" aria-hidden="true">◈</span><span class="nav-text">Raydium Pool</span></button>
     <button data-tab="liquidity" aria-label="Liquidity lab" title="Liquidity lab"><span class="nav-ico" aria-hidden="true">◎</span><span class="nav-text">Liquidity lab</span></button>
   </nav>
   <div class="side-panel"><span class="side-small">✦ BUILD ON SOLANA</span><strong>Your next idea starts here</strong><p>Launch SPL tokens on Devnet. Every on-chain action needs wallet approval.</p><a href="https://explorer.solana.com/?cluster=devnet" target="_blank" rel="noopener noreferrer">Explore Solana Devnet ↗</a></div>
@@ -96,14 +97,38 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.14;ba
 <section class="hidden" id="dashboard">
   <div class="topline"><span class="eyebrow">MY PORTFOLIO</span><span class="pill green">Local launch log</span></div><h1 class="page-title">Your launch <span class="gradient-text">command center.</span></h1><p class="page-desc">Your locally saved token creation records are matched to the currently connected Phantom address. Export them for backup; they aren't synced to a server.</p>
   <div class="panel"><div class="panel-title"><div><h2>▤ My token launches</h2><span class="small">Wallet: <strong id="walletState">Not connected</strong></span></div><div class="button-row"><button class="btn btn-quiet btn-small" id="exportRecords">↓ Export JSON</button><button class="btn btn-quiet btn-small" id="clearRecords">Clear local history</button></div></div><div class="token-grid" id="dashboardList"><div class="empty">Connect a wallet to see matching local records.</div></div><div class="connect-status"><span id="wallet" class="wallet-bar">Wallet disconnected</span></div></div>
-  <div class="section-heading"><h2>What happens after launch?</h2></div><div class="roadmap"><div class="roadmap-step"><small>STEP 01</small><b>Verify your mint</b><p>Open your token in Solana Explorer and confirm the wallet, supply and metadata.</p></div><div class="roadmap-step"><small>STEP 02</small><b>Choose a liquidity strategy</b><p>Use the pool planner to estimate a starting SOL/token ratio before using a DEX.</p></div><div class="roadmap-step"><small>STEP 03</small><b>Enable trading later</b><p>Raydium pool creation and swap transactions are planned integrations, not active functions.</p></div></div>
+  <div class="section-heading"><h2>What happens after launch?</h2></div><div class="roadmap"><div class="roadmap-step"><small>STEP 01</small><b>Verify your mint</b><p>Open your token in Solana Explorer and confirm the wallet, supply and metadata.</p></div><div class="roadmap-step"><small>STEP 02</small><b>Choose a liquidity strategy</b><p>Use the pool planner to estimate a starting SOL/token ratio before using a DEX.</p></div><div class="roadmap-step"><small>STEP 03</small><b>Enable trading later</b><p>Experimental Raydium Devnet pool creation is available in the Raydium Pool tab. Swaps remain disabled.</p></div></div>
 </section>
+<section class="hidden" id="raydium">
+ <div class="topline"><span class="eyebrow">RAYDIUM DEVNET</span><span class="pill warn">Experimental · Wallet approval required</span></div>
+ <h1 class="page-title">Create a <span class="gradient-text">liquidity pool.</span></h1>
+ <p class="page-desc">Create a Raydium CPMM pool using two SPL token mints and initial deposits on Solana Devnet. This is an experimental transaction builder, not a live Mainnet market. Test only with throwaway tokens.</p>
+ <div class="grid-two">
+ <div class="panel form-panel">
+ <div class="form-section-title"><span>01</span> Choose your pool pair</div>
+ <div class="field"><label for="rayMintA">Base token mint address</label><input id="rayMintA" spellcheck="false" placeholder="Paste your created Devnet SPL token mint"></div>
+ <div class="field"><label for="rayMintB">Quote token mint address</label><input id="rayMintB" spellcheck="false" value="So11111111111111111111111111111111111111112"><div class="form-note">Default is wrapped SOL. You may use another Devnet SPL mint.</div></div>
+ <div class="form-grid"><div class="field"><label for="rayAmountA">Base tokens to deposit</label><input id="rayAmountA" type="text" inputmode="decimal" value="1000000"></div><div class="field"><label for="rayAmountB">Quote tokens / SOL to deposit</label><input id="rayAmountB" type="text" inputmode="decimal" value="1"></div></div>
+ <div class="notice"><b>Review carefully:</b> Pool creation deposits both assets, requires network and pool rent/fees, and may not be reversible. Raydium CPMM pools can already exist for a pair. Devnet has no real monetary value. The SDK transaction must be independently reviewed before use.</div>
+ <label class="checkbox-row"><input type="checkbox" id="rayConsent"><span>I understand this is an experimental Devnet transaction, and I will review the amounts, programs and fees in Phantom before signing.</span></label>
+ <div class="button-row"><button class="btn btn-quiet" id="rayValidate" type="button">Validate pool plan</button><button class="btn" id="rayCreate" type="button">◎ Create Raydium Devnet pool</button></div>
+ <div class="status" id="rayStatus" role="status" aria-live="polite">Connect Phantom on Devnet and enter two token mints to begin.</div>
+ </div>
+ <div><div class="panel"><div class="panel-title"><h3>✦ Pool creation steps</h3><span class="pill warn">Devnet only</span></div>
+ <div class="guide-step"><span class="step-num">01</span><div><b>Validate on-chain mints</b><p>Confirm both SPL mint addresses, wallet balances and deposit precision.</p></div></div>
+ <div class="guide-step"><span class="step-num">02</span><div><b>Build Raydium CPMM transaction</b><p>Server constructs the Devnet transaction. Your wallet keys remain in Phantom.</p></div></div>
+ <div class="guide-step"><span class="step-num">03</span><div><b>Review & sign in Phantom</b><p>Confirm every requested action. No automatic wallet signing.</p></div></div>
+ <div class="guide-step"><span class="step-num">04</span><div><b>Verify pool on-chain</b><p>Confirmation and pool-account checks are required before displaying success.</p></div></div>
+ <div class="notice">Metadata uploads are disabled on this public preview. New token creation requiring IPFS uploads remains unavailable until secure storage is configured. Existing Devnet mints may be used here.</div>
+ <a class="link-inline" href="https://docs.raydium.io/" target="_blank" rel="noopener noreferrer">Raydium documentation ↗</a></div></div>
+ </div>
+ </section>
 <section class="hidden" id="liquidity">
   <div class="topline"><span class="eyebrow">LIQUIDITY LAB</span><span class="pill warn">Planner — no transaction</span></div><h1 class="page-title">Plan the <span class="gradient-text">first market.</span></h1><p class="page-desc">Set your token / SOL deposit ratio to calculate an indicative opening price and fully diluted value. This is a planner only: it does not create a Raydium CPMM pool.</p>
   <div class="grid-two"><div class="panel form-panel"><div class="form-section-title"><span>01</span> Initial pool allocation</div><div class="form-grid"><div class="field"><label for="poolTokens">Tokens to deposit</label><input id="poolTokens" type="number" value="10000000" min="0" step="any"></div><div class="field"><label for="poolSol">SOL to deposit</label><input id="poolSol" type="number" value="5" min="0" step="any"></div><div class="field"><label for="fdvSupply">Total circulating + locked supply</label><input id="fdvSupply" type="number" value="1000000000" min="0" step="any"></div><div class="field"><label for="solUsd">Optional SOL/USD price</label><input id="solUsd" type="number" placeholder="e.g. 150" step="any" min="0"></div></div><button class="btn" id="calculate">◈ Calculate launch price →</button><div class="formula" id="poolResult" role="status" aria-live="polite">Enter amounts to calculate the indicative price.</div><div class="notice">A calculated pool price is not a quote, a trade, or a guarantee of market value. No Raydium pool is created here.</div></div>
     <div><div class="panel"><div class="panel-title"><h3>✦ Liquidity roadmap</h3><span class="pill warn">Not deployed</span></div><ul class="feature-list"><li>Token and SOL allocation planner</li><li>Indicative starting price and FDV</li><li>Raydium CPMM Devnet account checks — planned</li><li>Simulated pool-create transaction — planned</li><li>Phantom-approved pool creation — planned</li><li>Actual swaps and price feeds — planned</li></ul><p class="small">Future pool creation requires a separately tested Raydium SDK integration and verified program addresses.</p><a class="link-inline" href="https://docs.raydium.io/" target="_blank" rel="noopener noreferrer">Raydium developer documentation ↗</a></div><div class="info-callout"><span class="icon">◎</span><div><h4>Keep testing on Devnet</h4><p>Before enabling Mainnet, perform an independent security audit and end-to-end Devnet transaction tests. Token launches and liquidity involve irreversible transactions.</p></div></div></div></div>
 </section>
-<footer class="disclaimer">SolLaunch Cosmos v3.0 · Independent Solana Devnet development project. Not affiliated with Cosmic Launch, Phantom, Raydium or Solana Foundation. No global market data, real swaps, or Raydium pool creation in this release. Token trading carries financial risk. <a href="https://explorer.solana.com/?cluster=devnet" target="_blank" rel="noopener noreferrer">Solana Explorer ↗</a></footer>
+<footer class="disclaimer">SolLaunch Cosmos v3.0 · Independent Solana Devnet development project. Not affiliated with Cosmic Launch, Phantom, Raydium or Solana Foundation. No global market data or real swaps. Experimental Raydium Devnet CPMM pool creation is available but not verified end-to-end. Token trading carries financial risk. <a href="https://explorer.solana.com/?cluster=devnet" target="_blank" rel="noopener noreferrer">Solana Explorer ↗</a></footer>
 </main></div></div>
 <script src="./vendor/solana-web3.iife.min.js"></script>
 <script>
@@ -126,7 +151,7 @@ function walletUi(){const addr=pubkey?.toBase58();$('wallet').textContent=addr?'
 async function updateBalance(){if(!pubkey)return;try{$('balance').textContent='Balance: '+fmt(await rpc().getBalance(pubkey)/1e9)+' Devnet SOL'}catch(e){$('balance').textContent='Balance unavailable — check your RPC connection.'}}
 async function connect(trusted=false){try{provider=getProvider();if(!provider?.isPhantom){if(!trusted)throw Error('Phantom not detected. Install the extension and use localhost or HTTPS.');return}const r=await provider.connect(trusted?{onlyIfTrusted:true}:{});pubkey=r.publicKey;walletUi()}catch(e){if(!trusted)status(e.message,true)}}
 $('connect').addEventListener('click',()=>connect());$('rpcSettings').addEventListener('click',()=>{const v=prompt('Devnet HTTPS RPC endpoint (use a trusted provider):',endpoint());if(v===null)return;try{const u=new URL(v);if(u.protocol!=='https:')throw Error('HTTPS required');localStorage.setItem('sollaunch-rpc',u.href);status('RPC updated. Devnet genesis will be verified before transactions.')}catch(e){status('Invalid RPC URL: '+e.message,true)}});
-const tabs=['home','create','explore','dashboard','liquidity'], labels={home:'Overview',create:'Create Token',explore:'Explore Tokens',dashboard:'My Launches',liquidity:'Liquidity Planner'};
+const tabs=['home','create','explore','dashboard','raydium','liquidity'], labels={home:'Overview',create:'Create Token',explore:'Explore Tokens',dashboard:'My Launches',raydium:'Raydium Pool',liquidity:'Liquidity Planner'};
 function route(tab){if(!tabs.includes(tab))tab='home';document.querySelectorAll('[data-tab]').forEach(b=>{const on=b.dataset.tab===tab;b.classList.toggle('active',on);b.setAttribute('aria-current',on?'page':'false')});tabs.forEach(id=>$(id).classList.toggle('hidden',id!==tab));$('breadcrumb').textContent='Workspace / '+labels[tab];if(location.hash!=='#'+tab)history.replaceState(null,'','#'+tab);render()}
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>route(b.dataset.tab)));window.addEventListener('hashchange',()=>route(location.hash.slice(1)));
 function u64(n){const a=new Uint8Array(8);for(let i=0;i<8;i++){a[i]=Number(n&255n);n>>=8n}return a}
@@ -193,6 +218,59 @@ function updatePreview(){
 for(const id of ['name','symbol','description','logo','supply'])$(id).addEventListener('input',updatePreview);
 $('logoFile').addEventListener('change',updatePreview);
 updatePreview();
+
+
+function rayStatus(message,bad=false){const e=$('rayStatus');e.textContent=message;e.classList.toggle('danger',bad)}
+function rayInputs(){
+ const mintA=$('rayMintA').value.trim(),mintB=$('rayMintB').value.trim();
+ if(!pubkey||!provider?.isPhantom)throw Error('Connect Phantom before building a pool.');
+ if(mintA===mintB)throw Error('Base and quote mints must be different.');
+ new (w().PublicKey)(mintA);new (w().PublicKey)(mintB);
+ const amountA=$('rayAmountA').value.trim(),amountB=$('rayAmountB').value.trim();
+ for(const value of [amountA,amountB])if(!/^(0|[1-9]\d{0,15})(\.\d{1,9})?$/.test(value)||!(Number(value)>0))throw Error('Enter positive decimal amounts without scientific notation.');
+ return {owner:pubkey.toBase58(),mintA,mintB,amountA,amountB};
+}
+$('rayValidate').addEventListener('click',async()=>{
+ try{const v=rayInputs();await checkNetwork();rayStatus('Devnet verified. Base mint: '+v.mintA+'\nQuote mint: '+v.mintB+'\nDeposits: '+v.amountA+' base tokens + '+v.amountB+' quote tokens.\nThis is a format and network check only. Balances and pool availability will be checked when building the transaction. No transaction submitted.')}
+ catch(e){rayStatus('Validation error: '+e.message,true)}
+});
+$('rayCreate').addEventListener('click',async()=>{
+ const btn=$('rayCreate');let signature='';
+ try{
+  if(!$('rayConsent').checked)throw Error('Please acknowledge the Devnet transaction risks.');
+  const input=rayInputs();await checkNetwork();btn.disabled=true;
+  rayStatus('Checking Devnet mints and balances, then building Raydium CPMM transaction…');
+  const response=await fetch('/api/raydium/build',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input)});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw Error(data.error||'Raydium builder unavailable');
+  if(data.network!=='devnet'||data.mintA!==input.mintA||data.mintB!==input.mintB||data.amountA!==input.amountA||data.amountB!==input.amountB)throw Error('Pool builder returned mismatched transaction details.');
+  if(!data.poolId||!data.transaction)throw Error('Pool builder returned incomplete transaction.');
+  const raw=Uint8Array.from(atob(data.transaction),c=>c.charCodeAt(0));
+  const tx=w().VersionedTransaction.deserialize(raw);
+  if(tx.message.staticAccountKeys[0]?.toBase58()!==input.owner)throw Error('Unexpected transaction fee payer.');
+  const knownProgram=data.programId;
+  if(!tx.message.staticAccountKeys.some(k=>k.toBase58()===knownProgram))throw Error('Expected Raydium CPMM program missing.');
+  rayStatus('Raydium pool address: '+data.poolId+'\nReview and sign the transaction in Phantom. Do not approve unexpected transfers, programs, or fees.');
+  const signed=await provider.signTransaction(tx);
+  if(pubkey.toBase58()!==input.owner)throw Error('Wallet changed during signing. Cancelled.');
+  signature=await rpc().sendRawTransaction(signed.serialize(),{skipPreflight:false,maxRetries:3,preflightCommitment:'confirmed'});
+  rayStatus('Submitted Devnet transaction: '+signature+'\nWaiting for confirmation…');
+  let confirmed=false,failed=false;
+  for(let i=0;i<25;i++){
+   const st=await rpc().getSignatureStatuses([signature],{searchTransactionHistory:true});
+   const v=st.value?.[0];
+   if(v?.err){failed=true;break}
+   if(v?.confirmationStatus==='confirmed'||v?.confirmationStatus==='finalized'){confirmed=true;break}
+   await new Promise(r=>setTimeout(r,1800));
+  }
+  if(failed)throw Error('Pool transaction failed on-chain. Inspect signature '+signature);
+  if(!confirmed)throw Error('Confirmation timed out. Check the transaction before retrying: '+signature);
+  const account=await rpc().getAccountInfo(new (w().PublicKey)(data.poolId),'confirmed');
+  if(!account)throw Error('Transaction confirmed, but pool account was not visible. Verify signature '+signature);
+  rayStatus('Raydium Devnet pool confirmed!\nPool: '+data.poolId+'\nTransaction: '+signature+'\nExplorer: https://explorer.solana.com/address/'+data.poolId+'?cluster=devnet');
+ }catch(e){rayStatus('Pool creation not verified: '+(e?.message||String(e))+(signature?'\nTransaction signature: '+signature:''),true)}
+ finally{btn.disabled=false}
+});
 
 provider=getProvider();if(provider?.isPhantom){provider.on?.('disconnect',()=>{pubkey=null;walletUi()});provider.on?.('accountChanged',async key=>{if(key){pubkey=key;walletUi()}else{pubkey=null;walletUi();await connect(true)}});connect(true)}route(location.hash.slice(1));
 })();
