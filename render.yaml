@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: sollaunch-cosmos
+    runtime: node
+    buildCommand: npm install && npm run setup
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: PUBLIC_METADATA_UPLOADS
+        value: "false"
