@@ -1,0 +1,15 @@
+{
+  "name": "sollaunch-cosmos-devnet",
+  "private": true,
+  "version": "3.0.0",
+  "description": "SolLaunch Cosmos — Solana Devnet launch dashboard",
+  "type": "module",
+  "scripts": {
+    "setup": "node setup.mjs",
+    "start": "node server.mjs",
+    "check": "node --check server.mjs && node --check setup.mjs"
+  },
+  "dependencies": {
+    "@solana/web3.js": "1.98.4"
+  }
+}
